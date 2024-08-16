@@ -6,20 +6,20 @@ import Container from './component/Container'
 function App() {
 
   const [inputEnter,setInputEnter]=useState("")
-
-  const [bgcolor,setBgColor]=useState("white")
-
-  const [buybtn,setbuybtn]=useState("Buy")
-
+  const [errorMessage,setErrorMessage]=useState("")
+  const [bought,setBought]=useState([])
+  
   const [grocerry,setGrocerry]=useState([
     "Atta","Rice","Dal","Sugar","Oil"
   ])
  
 
 
+
   const onchangegrocery= (event) => {
     setInputEnter(event.target.value)
   }
+
 
   
 
@@ -27,24 +27,32 @@ function App() {
     
     e.preventDefault()
 
+    if(!grocerry.includes(inputEnter)){
 
       let newGrocerryAdded=inputEnter
       let newGrocerry = [...grocerry,newGrocerryAdded]
       console.log(newGrocerry)
       setGrocerry(newGrocerry)
-    
+      setErrorMessage("")
+    }else{
+      setErrorMessage("Item already Exist")
+    } 
   }
 
-  let buyOnClick= ()=>{
-    setBgColor(bgcolor==="white"?"#219ebc":"white")
-    setbuybtn(buybtn==="Buy"?"Remove":"Buy")
+  let buyOnClick= (item)=>{
+    if(bought.includes(item)){
+      setBought(bought.filter(boughtitem=>boughtitem!=item))
+    }else{
+      setBought([...bought,item])
+    }
 
   }
   return (
    
       <Container>
         <GrocerryInput onchangegrocery={onchangegrocery}  onclickbutton={onclickbutton} />
-        <GrocerryItems grocerry={grocerry} buyOnClick={buyOnClick} bgcolor={bgcolor} buybtn={buybtn}/>
+        <h2 className="text-red-500">{errorMessage}</h2>
+        <GrocerryItems grocerry={grocerry} bought={bought} buyOnClick={buyOnClick} />
       </Container>
   
   )
